@@ -74,28 +74,45 @@ class TimePreferences(object):
    def __init__(self, name, windows_prefs=[]):
       self.name = name
       # Normalize preferences
-      norm = sum( pref for start, end, pref in windows_prefs ) + 0.
-      windows_prefs[:] = [ (start, end, pref/norm) for start, end, pref in windows_prefs ]
+      norm = sum( pref for pref, start, end in windows_prefs ) + 0.
+      windows_prefs[:] = [ (pref/norm, start, end) for pref, start, end in windows_prefs ]
 
       self.windows = []
       # Add each time window
-      for index, window in enumerate(windows_prefs):
+      for index, (pref, start, end) in enumerate(windows_prefs):
          self.windows.append(
                (pref, TimeWindow("%s_%i" % (name, index), start, end)))
 
-   def make_pref_dist(self, name=None):
-      ''' Function to build a deterministic variable that will be determined by
-      the Monte Carlo '''
-      if not name:
-         name = self.name
-         chooser = pymc.Categorical("ranking_", [pref for pref, window in
-            self.windows])
+      
+      # The chooser is a stochastic distribution where the output variable
+      # gives the window indexes, with probability proportional to the
+      # preference level.
+      self.chooser = pymc.Categorical("ranking_%s" % self.name, [pref for pref,
+         window in self.windows]) self.child_stochastics = [ self.chooser ]
+      # Load the time estimate delivery distributions for the different time
+      # windows
+      window_stochastics = [ window.make_stochastic() for pref, window in
+            self.windows ]
+      # Register these as dependent distributions for later MC generation
+      self.model_distributions = [ self.chooser ]
+      self.model_distributions.extend(window_stochastics)
+      # Make the deterministic that can be used to determine the expected
+      # 'ideal' arrival_time distribution from the window preferences and the
+      # window distributions
+      @pymc.deterministic
+      def time_pref(value=None, ranking=chooser, windows=window_stoc):
+         return windows[ranking]
 
-         window_stoc = [ window.make_stochastic() for pref, window in self.windows];
+      self.ideal_distribution = time_pref
 
-         @pymc.deterministic
-         def time_pref(value=None, ranking=chooser, windows=window_stoc):
-            return windows[ranking]
+      self.model_distributions.append(self.ideal_distribution)
+
+   def on_time(self, arrival_time):
+      ''' Test if arrival_time meets any of the time window constraints '''
+      for pref, window in self.windows:
+         if window.on_time(arrival_time):
+            return True
+      return False
 
    def satisfaction_probability(self, arrival_time):
       return sum( pref for pref, window in self.windows if
