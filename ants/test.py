@@ -1,6 +1,6 @@
 import unittest
 
-from ants.tests import *
+from ants.tests.timing import *
 
 if __name__ == "__main__":
    unittest.main()
