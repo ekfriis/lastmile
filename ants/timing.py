@@ -24,8 +24,7 @@ def _ensure_reftime(func):
    return fix_time
 
 class TimeWindow(object):
-   def __init__(self, name="", start = None, end = None):
-      self.name = name
+   def __init__(self, start = None, end = None):
       self.start_and_end = (start, end)
       self.start_ref = datetime_2_ref(start)
       self.end_ref = datetime_2_ref(end)
@@ -60,20 +59,19 @@ class TimeWindow(object):
       return self.start_and_end != other.start_and_end
 
    def __unicode__(self):
-      return "TimeWindow <%s> %s - %s" % (self.name, self.start.ctime(), self.start)
+      return "TimeWindow %s - %s" % (self.start.ctime(), self.start)
 
    def random(self):
       #return pymc.distributions.runiform(self.start_ref, self.end_ref)
       return numpy.random.uniform(self.start_ref, self.end_ref)
 
 class TimePreferences(object):
-   def __init__(self, name, windows_prefs=[]):
-      self.name = name
+   def __init__(self, windows_prefs=[]):
 
       self.windows = []
       # Add each time window
       for index, (pref, start, end) in enumerate(windows_prefs):
-         self.windows.append(TimeWindow("%s_%i" % (name, index), start, end))
+         self.windows.append(TimeWindow(start, end))
 
       # Normalize preferences
       self.prefs = [pref for pref, start, end in windows_prefs]

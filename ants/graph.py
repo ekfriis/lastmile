@@ -43,11 +43,7 @@ class Destination(object):
          arrival_time_here = self.time_pref.random()
          delivery_time_here = self.throw_delivery_time()
 
-         arrival_time_there = \
-               arrival_time_here + \ 
-               delivery_time_here + \
-               transit_time 
-
+         arrival_time_there = arrival_time_here + delivery_time_here + transit_time
          satisfaction_prob += other.satisfaction_probability(arrival_time_there)
 
       return satisfaction_prob/n

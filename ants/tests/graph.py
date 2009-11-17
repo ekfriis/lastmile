@@ -36,4 +36,4 @@ class TestDestination(unittest.TestCase):
       
       self.assertAlmostEquals(average, 5, 0)
       self.assertAlmostEquals(variance, 2, 0)
-
+   

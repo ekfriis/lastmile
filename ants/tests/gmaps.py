@@ -8,7 +8,6 @@ class TestGmaps(unittest.TestCase):
    
    def test_time(self):
       time = metric.time_between(self.home, self.davis)
-      time = time/60.
       # should be about 20 minutes
       self.assertTrue( 18 < time < 22 )
 
