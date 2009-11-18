@@ -1,6 +1,8 @@
 import ants.graph as graph
 import ants.timing as timing
 
+from ants.tests.std_time_inputs import standard_time_pref, standard_time_pref_normed
+
 class TestDestination(unittest.TestCase):
    def setUp(self):
       # Approximate difference between two points is 20 mintues
