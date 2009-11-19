@@ -20,11 +20,10 @@ Python 2.4+
 
 Numpy
 
-::
    $ sudo easy_install numpy
 
 Running unit tests
 ------------------
-::
+
    $ cd lastmile
    $ python run_all_tests.py
