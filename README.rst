@@ -1,12 +1,14 @@
+==========================
 Last Mile Designs Software
 ==========================
 
 Software to support time definite delivery routing.
 
 Packages
---------
+========
 
-***ants***
+ants
+----
 
 An (incomplete) implementation of Ant Colony Optimization for solving
 the assymetric traveling salesman problem with (specialized) time delivery
@@ -14,7 +16,7 @@ windows.
 
 
 Software requirements
----------------------
+=====================
 
 Python 2.4+
 
