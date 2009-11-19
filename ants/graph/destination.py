@@ -5,7 +5,7 @@ edges (distances between destinations)
 
 '''
 
-from ants.geocoders import gmaps as metric
+from ants.metric import metric
 import numpy as np
 
 class Destination(object):
