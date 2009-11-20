@@ -6,8 +6,6 @@ Store a collection of nodes and information about their interrelations
 
 import numpy as np
 import ants.graph.operations as op
-# Define parameters
-import ants.parameters as params
 
 class RouteMap(object):
     def __init__(self, destinations=None):
