@@ -6,8 +6,8 @@ Store a collection of nodes and information about their interrelations
 
 import numpy as np
 import ants.graph.operations as op
-# Define paramters
-from ants.parameters import STD_PARAMS as params
+# Define parameters
+import ants.parameters as params
 
 class RouteMap(object):
     def __init__(self, destinations=None):
@@ -15,19 +15,17 @@ class RouteMap(object):
         # Cache all the cost matrices
         
         # Dollar cost due to distance between nodes
-        self.distances = op.distance_cost_array(destinations, 
-                                                params.dollar_per_km)
+        self.distances = op.distance_cost_array(destinations)
 
         # Dollar cost due to travel time between nodes
-        self.times = op.time_cost_array(destinations, params.dollar_per_hour)
+        self.times = op.time_cost_array(destinations)
 
         # Meta dollar cost due to schedule incompatability between nodes.
         # Note that this cost is only used to estimate the 'cost of unsatisfaction,'
         # when the heuristic is trying to find the best route.  It gives an a priori
         # estimate of how compatabile the nodeA->nodeB transition is, assuming that 
         # nodeA's arrival time is a satisfactory one.
-        self.compatabilities = op.compatability_cost_array(
-            destinations, params.cost_per_sad_customer)
+        self.compatabilities = op.compatability_cost_array(destinations)
 
         # Tangible (distance & time) cost matrix
         self.tangible_cost_array = self.distances + self.times

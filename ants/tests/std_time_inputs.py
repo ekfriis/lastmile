@@ -25,3 +25,6 @@ standard_time_pref = timing.TimePreferences(standard_time_tuple)
 
 standard_time_pref_normed = [pref for pref, s, e in standard_time_tuple]
 normalize_list(standard_time_pref_normed)
+
+one_to_three = timing.TimePreferences([(1, today_at(13, 00), today_at(15, 00))])
+two_to_three = timing.TimePreferences([(1, today_at(14, 00), today_at(15, 00))])

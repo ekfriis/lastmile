@@ -4,7 +4,7 @@ Numeric utilties to build and manipulate the edge matrices used in optimizing
 the route.
 
 '''
-
+import ants.parameters as params
 import numpy as np
 
 def destination_cost_array(destinations, cost_func=lambda start, end: None):
@@ -26,23 +26,29 @@ def destination_cost_array(destinations, cost_func=lambda start, end: None):
     return output
 
 
+@params.use_parameters
 def distance_cost_array(destinations, dollar_per_km=None):
     ''' Return cost matrix due to driving distance for a list of destinations'''
     distance_cost = lambda start, end: \
             start.distance_to(end)*dollar_per_km/1000.
     return destination_cost_array(destinations, cost_func=distance_cost)
 
-
+@params.use_parameters
 def time_cost_array(destinations, dollar_per_hour=None):
     ''' Return cost matrix due to driving time for a list of destinations '''
     time_cost = lambda start, end: start.time_to(end)*dollar_per_hour/60.
     return destination_cost_array(destinations, cost_func=time_cost)
 
+@params.use_parameters
 def compatability_cost_array(destinations, cost_per_sad_customer=None, 
                              iterations=None):
     ''' Return cost matrix due to incompatability between destinations '''
-    sadness_cost = lambda start, end: \
-            (1 - start.compatability_to(end, iterations=iterations))* \
-            cost_per_sad_customer
+    def sadness_cost(start, end):
+        ''' Definte cost of sadness due to incompatibile destinations'''
+        if start == end:
+            return 0.
+        return (1 - start.compatability_to(end, iterations=iterations))*\
+                cost_per_sad_customer
+
     return destination_cost_array(destinations, cost_func=sadness_cost)
 
