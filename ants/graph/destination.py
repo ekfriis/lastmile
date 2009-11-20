@@ -53,6 +53,9 @@ class Destination(object):
         ''' Return time (in minutes) to another Destination '''
         return metric.time_between(self.address, other.address)
 
+    def satisfaction_probability(self, arrival_time):
+        return self.time_pref.satisfaction_probability(arrival_time)
+
     def compatability_to(self, other, iterations=500):
         ''' Determine schedule compatability to another destination 
 
