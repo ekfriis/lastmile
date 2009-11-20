@@ -22,11 +22,15 @@ Software requirements
 
 * Python 2.4+
 
-* Numpy
+* Numpy (scipy.org)
+* Google Maps api python interface (http://pypi.python.org/pypi/googlemaps/1.0.2)
 
-On Mac/Linux (Windows?) you can install numpy by opening a terminal and typing:
+On Mac/Linux (Windows?) you can install the dependencies by opening a terminal and typing:
 
    $ sudo easy_install numpy
+
+   $ sudo easy_install googlemaps
+
 
 Running the unit tests
 ----------------------
