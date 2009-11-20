@@ -1,4 +1,4 @@
-import ants.graph as graph
+from ants.graph.destination import Destination
 
 import unittest
 
@@ -6,11 +6,11 @@ import math
 
 class TestDestination(unittest.TestCase):
    def setUp(self):
-      self.home = graph.Destination('120 Hays St, Woodland, CA 95695', 
+      self.home = Destination('120 Hays St, Woodland, CA 95695', 
             time_pref=None,
             delivery_time_avg=5,
             delivery_time_variance=2)
-      self.davis = graph.Destination('313 K. St, Davis, CA 95616',
+      self.davis = Destination('313 K. St, Davis, CA 95616',
             time_pref=None,
             delivery_time_avg=5,
             delivery_time_variance=3)
@@ -36,4 +36,6 @@ class TestDestination(unittest.TestCase):
       
       self.assertAlmostEquals(average, 5, 0)
       self.assertAlmostEquals(variance, 2, 0)
-   
+
+if __name__ == "__main__":
+    unittest.main()
