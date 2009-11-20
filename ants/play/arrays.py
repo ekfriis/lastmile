@@ -39,3 +39,7 @@ pippo_inverted = 1/pippo
 
 print pippo_inverted # works, diagonal is inf
 
+print "======="
+print pippo
+print pippo[0, 1]
+print pippo[0, :]

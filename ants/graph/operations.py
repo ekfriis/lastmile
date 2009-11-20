@@ -26,20 +26,20 @@ def destination_cost_array(destinations, cost_func=lambda start, end: None):
     return output
 
 
-def distance_cost_array(destinations, dollar_per_km=1.0):
+def distance_cost_array(destinations, dollar_per_km=None):
     ''' Return cost matrix due to driving distance for a list of destinations'''
     distance_cost = lambda start, end: \
             start.distance_to(end)*dollar_per_km/1000.
     return destination_cost_array(destinations, cost_func=distance_cost)
 
 
-def time_cost_array(destinations, dollar_per_hour=8.0):
+def time_cost_array(destinations, dollar_per_hour=None):
     ''' Return cost matrix due to driving time for a list of destinations '''
     time_cost = lambda start, end: start.time_to(end)*dollar_per_hour/60.
     return destination_cost_array(destinations, cost_func=time_cost)
 
-def compatability_cost_array(destinations, cost_per_sad_customer=4.0, 
-                             iterations=500):
+def compatability_cost_array(destinations, cost_per_sad_customer=None, 
+                             iterations=None):
     ''' Return cost matrix due to incompatability between destinations '''
     sadness_cost = lambda start, end: \
             (1 - start.compatability_to(end, iterations=iterations))* \
