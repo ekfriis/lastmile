@@ -5,6 +5,7 @@ edges (distances between destinations)
 
 '''
 
+from ants.parameters import STD_PARAMS as params
 from ants.metric import metric
 import numpy as np
 
@@ -54,9 +55,10 @@ class Destination(object):
         return metric.time_between(self.address, other.address)
 
     def satisfaction_probability(self, arrival_time):
+        ''' Satisfaction probability for this destination given arrival_time '''
         return self.time_pref.satisfaction_probability(arrival_time)
 
-    def compatability_to(self, other, iterations=500):
+    def compatability_to(self, other, iterations=params.iterations):
         ''' Determine schedule compatability to another destination 
 
             Compatability is defined as the average satisfaction probability of
