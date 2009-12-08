@@ -13,7 +13,12 @@ _ALGO = {
     'dollar_per_hour': 8.0,
     'cost_per_sad_customer': 4.0,
     # Std. number of MC iterations
-    'iterations': 500
+    'iterations': 500,
+    #Pheromone paramters
+    'initial_pheromone': 0.01,
+    'pheromone_decay': 0.1,
+    # Number of ants in each colony
+    'num_ants' : 500
 }
 
 def dump_parameters(filename='algo_parameters.pkl'):
