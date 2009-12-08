@@ -22,7 +22,8 @@ class Destination(object):
                  delivery_time_avg=4, delivery_time_variance=2):
         self.address = address
         self.time_pref = time_pref
-        self.lat, self.lng = metric.lat_lng(address)
+        self.lat_lng = metric.lat_lng(address)
+        self.lat, self.lng = self.lat_lng
 
         scale = float(delivery_time_variance)/delivery_time_avg
         shape = float(delivery_time_avg*delivery_time_avg) / \
@@ -56,6 +57,8 @@ class Destination(object):
 
     def satisfaction_probability(self, arrival_time):
         ''' Satisfaction probability for this destination given arrival_time '''
+        if self.time_pref is None:
+            return 1.
         return self.time_pref.satisfaction_probability(arrival_time)
 
     @params.use_parameters
@@ -66,9 +69,12 @@ class Destination(object):
             the other destination, taking into account the delivery time here
             (variable) and transit time (should be variable) supposing that the
             arrival time at *this* destination is distributed according to
-            *this* destination's time preferences.
+            *this* destination's time preferences.  If either this node, or its 
+            partner have no preference, return 1, for full compatability.
 
         '''
+        if self.time_pref is None or other.time_pref is None:
+            return 1.
         # Get time to other destination - eventually this should be Monte
         # Carlo'd
         transit_time = self.time_to(other)
