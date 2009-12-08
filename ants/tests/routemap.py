@@ -36,6 +36,18 @@ class TestRouteMap(unittest.TestCase):
         self.assertTrue(self.routemap.compatabilities[1][0] > 0)
         self.assertEqual(self.routemap.compatabilities[0][0], 0)
         self.assertEqual(self.routemap.compatabilities[1][1], 0)
+    
+    def test_time_for_edge(self):
+        self.assertAlmostEqual(
+            self.routemap.time_for_edge(0, 1), 
+            20/60.0*params.get_parameter('dollar_per_hour'), 0)
+
+    def test_total_tangible(self):
+        woodland_2_davis = [0, 1]
+        self.assertAlmostEqual(
+            self.routemap.total_tangible_cost_for_route(woodland_2_davis),
+            0.33*params.get_parameter('dollar_per_hour') + 
+            19.3*params.get_parameter('dollar_per_km'), 1)
         
 if __name__ == "__main__":
     unittest.main()

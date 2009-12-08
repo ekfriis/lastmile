@@ -36,4 +36,24 @@ class TestOperations(unittest.TestCase):
         # Woodland to davis is about 20 minutes
         self.assertAlmostEqual(time_array[0,1], 1/3., 0)
         self.assertAlmostEqual(time_array[1,0], 1/3., 0) 
+
+    def test_route_hops(self):
+        self.assertEqual(list(route_hops([1,2,3,4])),
+                         [(1,2), (2,3), (3,4)])
+        # Numpy case
+        self.assertEqual(list(route_hops(
+            np.array([1,2,3,4]))),
+            [(1,2), (2,3), (3,4)])
+
+    def test_select_weighted(self):
+        test = [1, 2, 3, 4, 5]
+        choices = [0]*5
+        iterations = 5000
+        for i in range(iterations):
+            choices[select_edge_weighted(test)] += 1
+        normalization = sum(test)*1.0/iterations
+        for choice_count, actual in zip(choices, test):
+            self.assertAlmostEqual(choice_count*normalization, actual, 0)
+
+
     
