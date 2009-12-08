@@ -52,3 +52,21 @@ def compatability_cost_array(destinations, cost_per_sad_customer=None,
 
     return destination_cost_array(destinations, cost_func=sadness_cost)
 
+def select_edge_weighted(weights):
+    ''' Probabilistically select an index from an array where each element 
+    is the relative weight. '''
+    throw = np.random.rand()*np.sum(weights)
+    return np.searchsorted(np.cumsum(weights), throw)
+
+def route_hops(route):
+    ''' Yield each route hop as a pair of (start, end) 
+    Example: route_hops([1,2,3,4]) = [(1,2), (2,3), (3,4)]
+    
+    '''
+    for start, end in zip(route[:-1], route[1:]):
+        yield (start, end)
+
+def quantify_route(route, cost_func):
+    ''' Yield cost_func(hop) for each hop in the route '''
+    for start, end in route_hops(route):
+        yield cost_func(start, end)
