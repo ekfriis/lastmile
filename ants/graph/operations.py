@@ -52,11 +52,24 @@ def compatability_cost_array(destinations, cost_per_sad_customer=None,
 
     return destination_cost_array(destinations, cost_func=sadness_cost)
 
+def max_sorted_masked_array(array):
+    index = len(array)
+    for mask_value in array.mask[::-1]:
+        index -= 1
+        if not mask_value:
+            break
+    return array[index]
+
 def select_edge_weighted(weights):
     ''' Probabilistically select an index from an array where each element 
     is the relative weight. '''
-    throw = np.random.rand()*np.sum(weights)
-    return np.searchsorted(np.cumsum(weights), throw)
+    #throw = np.random.rand()*np.sum(weights)
+    cumsum = np.cumsum(weights)
+    # Find max value of array
+    throw = np.random.rand()*max_sorted_masked_array(cumsum)
+
+    #throw = np.random.rand()*np.max(cumsum)
+    return np.searchsorted(cumsum, throw)
 
 def route_hops(route):
     ''' Yield each route hop as a pair of (start, end) 
