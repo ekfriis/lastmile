@@ -46,7 +46,7 @@ class TestOperations(unittest.TestCase):
             [(1,2), (2,3), (3,4)])
 
     def test_select_weighted(self):
-        test = [1, 2, 3, 4, 5]
+        test = np.ma.MaskedArray([1, 2, 3, 4, 5], mask = [False]*5)
         choices = [0]*5
         iterations = 5000
         for i in range(iterations):
