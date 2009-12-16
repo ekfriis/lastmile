@@ -18,7 +18,7 @@ _ALGO = {
     'initial_pheromone': 0.01,
     'pheromone_decay': 0.1,
     # Number of ants in each colony
-    'num_ants' : 500
+    'num_ants' : 50
 }
 
 def dump_parameters(filename='algo_parameters.pkl'):
