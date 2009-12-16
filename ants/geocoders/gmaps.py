@@ -7,7 +7,8 @@ address, and driving time/distance for address pairs.
 
 from googlemaps import GoogleMaps, GoogleMapsError
 from ants.geocoders.gmaps_api_key import api_key
-import pickle
+import cPickle as pickle
+import gzip
 import os
 
 _LAT_LNG_CACHE = {}
@@ -43,17 +44,17 @@ def clear():
     _LAT_LNG_CACHE.clear()
     _DIRECTIONS_CACHE.clear()
 
-def save(filename='gmaps.gis'):
+def save(filename='gmaps.gis.gz'):
     ''' Save cached address info to file '''
-    output = file(filename, 'wb')
+    output = gzip.GzipFile(filename, 'wb')
     pickle.dump(_LAT_LNG_CACHE, output)
     pickle.dump(_DIRECTIONS_CACHE, output)
     output.close()
 
-def load(filename='gmaps.gis'):
+def load(filename='gmaps.gis.gz'):
     ''' Load cached address info from file '''
     if os.path.exists(filename):
-        input_file = file(filename, 'rb')
+        input_file = gzip.GzipFile(filename, 'rb')
         clear()
         _LAT_LNG_CACHE.update(pickle.load(input_file))
         _DIRECTIONS_CACHE.update(pickle.load(input_file))
