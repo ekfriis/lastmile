@@ -21,13 +21,10 @@ class Colony(object):
         # Initialize pheromone array as ndest*ndest
         self.pheromones = np.array(
             [[initial_pheromone]*self.num_dest]*self.num_dest, dtype=float)
-        self.routes_and_results = []
-        self.route_history = []
+        self.routes_and_results = {}
 
-    def run_ants(self, include_timing=False, quiet=True):
+    def run_ants(self, include_timing=False):
         ''' Run N ants and update the pheromone matrix '''
-        best_cost = np.Inf
-        best_route = None
         # Check if we are doing the initial run w/ no timing info.
         cheapness = None
         if include_timing:
@@ -38,40 +35,53 @@ class Colony(object):
         # Transition matrix is pheromone for each edge times inverse cost
         # between each edge 
         transition_matrix = cheapness*self.pheromones
+
+        # Route initializer 
+        # Start at origin
+        route_init = [0]
+        # All tbd points excepting the origin
+        route_init.extend( [-1]*(self.num_dest-1) )
+        # Return to origin at end
+        route_init.append(0)
+
         for ant in range(self.num_ants):
             # Setup mask
             mask = np.array([False]*self.num_dest, dtype=bool)
             # Start at origin
             current_location = 0
-            route = np.array([0], dtype=int)
+            # Initialize route
+            route = np.array(route_init, dtype=int)
+            # Mark the origin as visited in the mask
             mask[0] = True
 
-            #Run the route
-            while len(route) < self.num_dest:
+            # Index of route position
+            route_index = 1
+            while route_index < self.num_dest:
                 # Get costs for traveling from current location to others
                 # note that only costs for edges to unvisted nodes are included.
                 next_location = op.select_edge_weighted(
                     np.ma.MaskedArray(
                         transition_matrix[current_location, :], mask=mask))
                 # Update the route and mask
-                route = np.append(route, next_location)
+                route[route_index] = next_location
                 mask[next_location] = True
                 # Move to the new location
                 current_location = next_location
+                route_index += 1
             
             # When done, update the pheromone matrix for this routes cost
             cost = self.routemap.total_tangible_cost_for_route(route)
+
             if include_timing:
                 cost += self.routemap.total_satisfaction_costs
+
+            route_tuple = tuple(route)
+            if tuple(route) not in self.routes_and_results:
+                self.routes_and_results[route_tuple] = (cost, route) 
 
             # Update pheromone matrix
             for start, end in op.route_hops(route):
                 self.pheromones[start, end] += 1.0/cost
-
-            if cost < best_cost:
-                best_cost = cost
-                best_route = route
-        return best_cost, best_route
 
     @params.use_parameters
     def update_pheromones(self, pheromone_decay=None):
