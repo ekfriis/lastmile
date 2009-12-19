@@ -39,6 +39,10 @@ def time_cost_array(destinations, dollar_per_hour=None):
     time_cost = lambda start, end: start.time_to(end)*dollar_per_hour/60.
     return destination_cost_array(destinations, cost_func=time_cost)
 
+def times_array(destinations):
+    time = lambda start, end: start.time_to(end)
+    return destination_cost_array(destinations, time)
+
 @params.use_parameters
 def compatability_cost_array(destinations, cost_per_sad_customer=None, 
                              iterations=None):
@@ -63,12 +67,9 @@ def max_sorted_masked_array(array):
 def select_edge_weighted(weights):
     ''' Probabilistically select an index from an array where each element 
     is the relative weight. '''
-    #throw = np.random.rand()*np.sum(weights)
     cumsum = np.cumsum(weights)
     # Find max value of array
     throw = np.random.rand()*max_sorted_masked_array(cumsum)
-
-    #throw = np.random.rand()*np.max(cumsum)
     return np.searchsorted(cumsum, throw)
 
 def route_hops(route):
