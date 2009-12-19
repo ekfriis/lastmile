@@ -6,6 +6,7 @@ Store a collection of nodes and information about their interrelations
 
 import ants.graph.operations as op
 import ants.parameters as params
+import numpy as np
 
 class RouteMap(object):
     ''' Central point for informationg aboug graph edges
@@ -22,7 +23,10 @@ class RouteMap(object):
         self.distances = op.distance_cost_array(destinations)
 
         # Dollar cost due to travel time between nodes
-        self.times = op.time_cost_array(destinations)
+        self.time_costs = op.time_cost_array(destinations)
+
+        # Travel time between nodes
+        self.times = op.times_array(destinations)
 
         # Meta dollar cost due to schedule incompatability between nodes.  Note
         # that this cost is only used to estimate the 'cost of unsatisfaction,'
@@ -33,7 +37,7 @@ class RouteMap(object):
                 op.compatability_cost_array(destinations)
 
         # Tangible (distance & time) cost matrix
-        self.tangible_costs = self.distances + self.times
+        self.tangible_costs = self.distances + self.time_costs
         
         # Total cost matrix, includes meta cost for poorly compatible nodes
         self.costs = self.tangible_costs + self.compatabilities
@@ -66,6 +70,24 @@ class RouteMap(object):
         ''' Return total tangible cost for a route '''
         return sum(op.quantify_route(
             route, cost_func=self.tangible_cost_for_edge))
+
+    def sim_arrival_times(self, route, start_time=0):
+        output = [0]*len(route)
+        current_time = start_time
+        # Departure from origin
+        output[0] = current_time
+        for start, end in op.route_hops(route):
+            # Sim delivery time @ start
+            current_time += self.destinations[end].throw_delivery_time()
+            # Travel from start to end
+            current_time += self.time_for_edge(start, end)
+            output[end] = current_time
+        return output
+
+    def hist_arrival_times(self, route, iterations=500):
+        # First axis is sim#, second is destination index
+        return np.array(
+            [self.sim_arrival_times(route) for i in range(iterations)])
 
     @params.use_parameters
     def total_satisfaction_costs(self, route, iterations=None, 
