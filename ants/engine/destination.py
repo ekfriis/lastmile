@@ -19,7 +19,7 @@ class Destination(object):
     
     '''
     def __init__(self, address=None, time_pref=None, 
-                 delivery_time_avg=4, delivery_time_variance=2):
+                 delivery_time_avg=2, delivery_time_variance=1):
         self.address = address
         self.time_pref = time_pref
         self.lat_lng = metric.lat_lng(address)
