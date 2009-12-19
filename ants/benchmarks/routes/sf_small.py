@@ -1,6 +1,9 @@
 from ants.graph.destination import Destination
 from ants.metric import metric
 
+if __name__ == "__main__":
+    metric.loud()
+
 metric.load()
 
 destinations = [Destination(address) for address in 
