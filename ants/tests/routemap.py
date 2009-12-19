@@ -28,7 +28,7 @@ class TestRouteMap(unittest.TestCase):
             self.routemap.distances[0][1], 
             19.3*params.get_parameter('dollar_per_km'), 0)
         self.assertAlmostEqual(
-            self.routemap.times[0][1], 
+            self.routemap.time_costs[0][1], 
             20.0/60.0*params.get_parameter('dollar_per_hour'), 0)
 
     def test_compat(self):
@@ -40,7 +40,7 @@ class TestRouteMap(unittest.TestCase):
     def test_time_for_edge(self):
         self.assertAlmostEqual(
             self.routemap.time_for_edge(0, 1), 
-            20/60.0*params.get_parameter('dollar_per_hour'), 0)
+            20.3, 0)
 
     def test_total_tangible(self):
         woodland_2_davis = [0, 1]
