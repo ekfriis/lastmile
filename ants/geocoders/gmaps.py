@@ -7,6 +7,8 @@ address, and driving time/distance for address pairs.
 
 from googlemaps import GoogleMaps, GoogleMapsError
 from ants.geocoders.gmaps_api_key import api_key
+
+import time
 import cPickle as pickle
 import gzip
 import os
@@ -53,6 +55,8 @@ def save(filename='gmaps.gis.gz'):
 
 def load(filename='gmaps.gis.gz'):
     ''' Load cached address info from file '''
+    if _VERBOSITY.is_loud():
+        print "Loading:", filename,
     if os.path.exists(filename):
         input_file = gzip.GzipFile(filename, 'rb')
         clear()
@@ -60,12 +64,12 @@ def load(filename='gmaps.gis.gz'):
         _DIRECTIONS_CACHE.update(pickle.load(input_file))
     else:
         print "Error: could not load metric file: %s" % filename
+    print " ... done"
 
 def lat_lng(address):
     ''' Get latitude/long from an address'''
     if _VERBOSITY.is_loud():
         print "Lat/Lng:", address
-
     if address not in _LAT_LNG_CACHE:
         try:
             result = _GMAPS.address_to_latlng(address)
@@ -97,15 +101,16 @@ def directions(address_1, address_2):
     # Look it up on google if we haven't already
     address_pair = (address_1, address_2)
     if address_pair not in _DIRECTIONS_CACHE:
+        time.sleep(0.100)
         # Validate addresses and put lat/lng in cache
         lat_lng(address_1)
         lat_lng(address_2)
         try:
             result = _GMAPS.directions(address_1, address_2)
             _DIRECTIONS_CACHE[address_pair] = result
-        except GoogleMapsError:
-            raise MetricError, \
-                    " google maps can't get directions for %s-%s" \
-                    % (address_1, address_2)
+        except GoogleMapsError as gmaps_error:
+            raise MetricError(gmaps_error.args, 
+                              " google maps can't get directions for %s-%s" \
+                              % (address_1, address_2))
     return _DIRECTIONS_CACHE[address_pair]
 
