@@ -1,6 +1,6 @@
 import unittest
 
-from ants.graph.destination import Destination
+from ants.engine.destination import Destination
 import ants.timing as timing
 
 from ants.tests.std_time_inputs import \

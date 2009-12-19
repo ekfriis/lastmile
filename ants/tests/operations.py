@@ -1,7 +1,7 @@
 import unittest
 
-from ants.graph.operations import *
-from ants.graph.destination import Destination
+from ants.engine.operations import *
+from ants.engine.destination import Destination
 
 import numpy as np
 

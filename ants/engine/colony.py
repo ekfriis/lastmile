@@ -5,7 +5,7 @@ Holds an ensemble of ants, and the pheromone matrix
 '''
 import numpy as np
 import ants.parameters as params
-import ants.graph.operations as op
+import ants.engine.operations as op
 
 class Colony(object):
     ''' Colony - an ensemble of ants

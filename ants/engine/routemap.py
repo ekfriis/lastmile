@@ -4,7 +4,7 @@ Store a collection of nodes and information about their interrelations
 
 '''
 
-import ants.graph.operations as op
+import ants.engine.operations as op
 import ants.parameters as params
 import numpy as np
 

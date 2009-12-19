@@ -1,4 +1,4 @@
-from ants.graph.destination import Destination
+from ants.engine.destination import Destination
 
 import unittest
 
