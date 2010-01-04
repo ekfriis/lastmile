@@ -105,24 +105,27 @@ class ChoiceMaker(object):
     def __init__(self, samples):
         # Histogram the input, with 20 minute bins
         self.bin_contents, bin_edges =\
-                np.histogram(samples, range=(0, 1440), bins=72, normed=1)
+                np.histogram(samples, range=(0, 1440), bins=144, normed=1)
         # Compute the bin centers from the bin edges
         self.bin_centers = list(
             operate_on_pairs(bin_edges,func=lambda a,b: 0.5*(a+b)))
         # Build the spline over the bin contents
-        self.spline = interpolate.splrep(self.bin_centers, self.bin_contents)
+        self.spline = interpolate.splrep(self.bin_centers, self.bin_contents, s=0)
 
         threshold = np.average(self.bin_contents)
 
-        # Find bins above threshold and clean any spline artifacts
-        self.non_zero_bins = [bin for val, bin in izip(self.bin_contents,
-                                                       self.bin_centers) 
-                              if val > threshold ]
+        # Find bins above threshold 
+        non_zero_bins = (
+            bin for val, bin in izip(self.bin_contents, self.bin_centers) 
+            if val > threshold)
+        # Remove any bins that are affected by spline artifacts 
+        self.clean_bins = [ bin for bin in non_zero_bins if self.pdf(bin) > 0 ]
+
 
         # Find all roots (extremum - points where first derivative of pdf is
         # zero).  Also store the value of the second derivative
         my_roots = [(root, self.pdf(root, der=2)) for root in 
-                    find_roots(lambda x:self.pdf(x, der=1), self.non_zero_bins)]
+                    find_roots(lambda x:self.pdf(x, der=1), self.clean_bins)]
 
         # Split into maxima and minima
         maxima = [ root for root, second_der in my_roots if second_der < 0 ]
@@ -169,7 +172,7 @@ if __name__ == "__main__":
         np.random.normal(550.0, 20.0, 5000),
         np.random.normal(750.0, 50.0, 5000),
         np.random.normal(150.0, 50.0, 2000),
-        np.random.normal(1000.0, 10.0, 5000),
+        np.random.normal(1000.0, 20.0, 2000),
         np.random.normal(700.0, 30.0, 1000)
     ))
 
