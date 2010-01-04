@@ -1,5 +1,6 @@
 from ants.engine.rootfinder import find_roots
 import unittest
+import numpy as np
 
 class TestRootFinder(unittest.TestCase):
     def test_rootfinder(self):
@@ -7,8 +8,7 @@ class TestRootFinder(unittest.TestCase):
             # (x-1)(x+2)
             return x*x + x - 2
 
-        roots = list(find_roots(my_rooty_func, -5, 5, 0.1))
-
+        roots = list(find_roots(my_rooty_func, np.arange(-5, 5, 0.1)))
         self.assertEqual(len(roots), 2)
 
         roots2 = roots[:]
@@ -23,5 +23,5 @@ class TestRootFinder(unittest.TestCase):
         def norootfunc(x):
             return x*x + 3
 
-        roots = list(find_roots(norootfunc, -5, 5, 0.1))
+        roots = list(find_roots(norootfunc, np.arange(-5, 5, 0.1)))
         self.assertEqual(roots, [])

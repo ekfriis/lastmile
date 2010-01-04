@@ -7,7 +7,7 @@ Tools for finding roots of functions
 from scipy import optimize
 from ants.engine.utilities import consecutive_pairs
 
-__all__ = ['find_roots']
+__all__ = ['find_roots', 'xfrange']
 
 def root_domains(x_vals, func):
     ''' Yields x pairs that contain a zero crossing '''
@@ -35,12 +35,7 @@ def xfrange(min, max, step):
             val = max
         yield val
 
-def find_roots(func, min, max, step_size):
-    ''' Find all roots of a function
-
-    Finds all roots of a func(x), for min < x < max, within a precision of
-    step_size.  
-    '''
-    for root in find_roots_in(
-        root_domains(xfrange(min, max, step_size), func), func):
+def find_roots(func, between_points):
+    " Find all roots of a function between given points "
+    for root in find_roots_in(root_domains(between_points, func), func):
         yield root
