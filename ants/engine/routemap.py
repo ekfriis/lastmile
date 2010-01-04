@@ -76,8 +76,8 @@ class RouteMap(object):
         current_time = start_time
         # Departure from origin
         output[0] = current_time
-        for start, end in op.route_hops(route):
-            # Sim delivery time @ start
+        for start, end in op.consecutive_pairs(route):
+            # Sim delivery time @ starjt
             current_time += self.destinations[end].throw_delivery_time()
             # Travel from start to end
             current_time += self.time_for_edge(start, end)
@@ -97,7 +97,7 @@ class RouteMap(object):
         for iteration in range(iterations):
             # Pull a random start time from the base
             current_time = self.destinations[route[0]].time_pref.random()
-            for start, end in op.route_hops(route):
+            for start, end in op.consecutive_pairs(route):
                 # Time to move from start to end
                 current_time = self.time_for_edge(start, end)
                 # Get our current customer

@@ -6,6 +6,7 @@ the route.
 '''
 import ants.parameters as params
 import numpy as np
+from ants.engine.utilities import consecutive_pairs
 
 def destination_cost_array(destinations, cost_func=lambda start, end: None):
     ''' Generalized construction of 2d arrays describing graph edge costs
@@ -24,7 +25,6 @@ def destination_cost_array(destinations, cost_func=lambda start, end: None):
         for index_b, end in enumerate(destinations):
             output[index_a, index_b] = cost_func(start, end)
     return output
-
 
 @params.use_parameters
 def distance_cost_array(destinations, dollar_per_km=None):
@@ -56,7 +56,13 @@ def compatability_cost_array(destinations, cost_per_sad_customer=None,
 
     return destination_cost_array(destinations, cost_func=sadness_cost)
 
+def quantify_route(route, cost_func):
+    ''' Yield cost_func(hop) for each hop in the route '''
+    for start, end in consecutive_pairs(route):
+        yield cost_func(start, end)
+
 def max_sorted_masked_array(array):
+    ''' Return the maximum value of a sorted masked np.array'''
     index = len(array)
     for mask_value in array.mask[::-1]:
         index -= 1
@@ -65,22 +71,8 @@ def max_sorted_masked_array(array):
     return array[index]
 
 def select_edge_weighted(weights):
-    ''' Probabilistically select an index from an array where each element 
-    is the relative weight. '''
+    ''' Return index of array randomly, weighted by array contents'''
     cumsum = np.cumsum(weights)
     # Find max value of array
     throw = np.random.rand()*max_sorted_masked_array(cumsum)
     return np.searchsorted(cumsum, throw)
-
-def route_hops(route):
-    ''' Yield each route hop as a pair of (start, end) 
-    Example: route_hops([1,2,3,4]) = [(1,2), (2,3), (3,4)]
-    
-    '''
-    for start, end in zip(route[:-1], route[1:]):
-        yield (start, end)
-
-def quantify_route(route, cost_func):
-    ''' Yield cost_func(hop) for each hop in the route '''
-    for start, end in route_hops(route):
-        yield cost_func(start, end)

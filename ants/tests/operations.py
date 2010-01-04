@@ -37,13 +37,20 @@ class TestOperations(unittest.TestCase):
         self.assertAlmostEqual(time_array[0,1], 1/3., 0)
         self.assertAlmostEqual(time_array[1,0], 1/3., 0) 
 
-    def test_route_hops(self):
-        self.assertEqual(list(route_hops([1,2,3,4])),
+    def test_consecutive_pairs(self):
+        self.assertEqual(list(consecutive_pairs([1,2,3,4])),
                          [(1,2), (2,3), (3,4)])
         # Numpy case
-        self.assertEqual(list(route_hops(
+        self.assertEqual(list(consecutive_pairs(
             np.array([1,2,3,4]))),
             [(1,2), (2,3), (3,4)])
+
+        # Corner cases
+        self.assertEqual(
+            list(consecutive_pairs([])), [])
+
+        self.assertEqual(
+            list(consecutive_pairs([1])), [])
 
     def test_select_weighted(self):
         test = np.ma.MaskedArray([1, 2, 3, 4, 5], mask = [False]*5)
@@ -55,5 +62,3 @@ class TestOperations(unittest.TestCase):
         for choice_count, actual in zip(choices, test):
             self.assertAlmostEqual(choice_count*normalization, actual, 0)
 
-
-    

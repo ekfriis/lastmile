@@ -80,7 +80,7 @@ class Colony(object):
                 self.routes_and_results[route_tuple] = (cost, route) 
 
             # Update pheromone matrix
-            for start, end in op.route_hops(route):
+            for start, end in op.consecutive_pairs(route):
                 self.pheromones[start, end] += 1.0/cost
 
     @params.use_parameters
