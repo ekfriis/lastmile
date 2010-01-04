@@ -25,7 +25,9 @@ def find_roots_in(domains, func):
         yield optimize.brentq(func, a, b)
 
 def xfrange(min, max, step):
-    ''' xrange, but for floats.  Returns [min,max] '''
+    ''' xrange, but for floats.  Returns [min,max] by step'''
+    if min > max:
+        raise ValueError, "min parameter must be less than max!"
     val = min-step
     while val < max:
         val += step

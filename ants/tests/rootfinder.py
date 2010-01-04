@@ -25,5 +25,3 @@ class TestRootFinder(unittest.TestCase):
 
         roots = list(find_roots(norootfunc, -5, 5, 0.1))
         self.assertEqual(roots, [])
-
-
