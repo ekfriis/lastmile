@@ -66,11 +66,7 @@ def quantify_route(route, cost_func):
 
 def max_sorted_masked_array(array):
     ''' Return the maximum value of a sorted masked np.array'''
-    index = len(array)
-    for mask_value in array.mask[::-1]:
-        index -= 1
-        if not mask_value:
-            break
+    index = np.ma.flatnotmasked_edges(array)[1]
     return array[index]
 
 def select_edge_weighted(weights):
