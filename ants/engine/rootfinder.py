@@ -14,7 +14,6 @@ def root_domains(x_vals, func):
     for x1, x2 in consecutive_pairs(x_vals):
         value1 = func(x1)
         value2 = func(x2)
-        print x1, x2, value1, value2
         # Check if opposite sign
         if value1*value2 <= 0:
             yield (x1, x2)

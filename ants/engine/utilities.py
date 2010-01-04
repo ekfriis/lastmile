@@ -22,3 +22,17 @@ def operate_on_pairs(the_list, func=None):
     "Yield func(a,b) where are a and b are consecutive pairs from the_list"
     for first, second in consecutive_pairs(the_list):
         yield func(first, second)
+
+def unmasked_values(maskedarray):
+    " Yield all unmasked values in a masked numpy array "
+    for value in maskedarray:
+        if not value.mask:
+            yield value
+
+def less(a, b):
+    " Returns lesser of two inputs "
+    return ((a < b) and a or b)
+
+def more(a, b):
+    " Returns greater of two inputs "
+    return ((a > b) and a or b)
