@@ -17,3 +17,8 @@ def consecutive_pairs(the_list):
     copy_1, copy_2 = tee(the_list, 2)
     for first, second in izip(copy_1, islice(copy_2, 1, None)):
         yield first, second
+
+def operate_on_pairs(the_list, func=None):
+    "Yield func(a,b) where are a and b are consecutive pairs from the_list"
+    for first, second in consecutive_pairs(the_list):
+        yield func(first, second)

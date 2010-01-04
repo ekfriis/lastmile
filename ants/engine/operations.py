@@ -6,7 +6,7 @@ the route.
 '''
 import ants.parameters as params
 import numpy as np
-from ants.engine.utilities import consecutive_pairs
+from ants.engine.utilities import consecutive_pairs, operate_on_pairs
 
 def destination_cost_array(destinations, cost_func=lambda start, end: None):
     ''' Generalized construction of 2d arrays describing graph edge costs
@@ -57,9 +57,12 @@ def compatability_cost_array(destinations, cost_per_sad_customer=None,
     return destination_cost_array(destinations, cost_func=sadness_cost)
 
 def quantify_route(route, cost_func):
-    ''' Yield cost_func(hop) for each hop in the route '''
-    for start, end in consecutive_pairs(route):
-        yield cost_func(start, end)
+    ''' Yield cost_func(hop) for each hop in the route 
+
+    Only a wrapper about operate_on_pairs from utilities, for clarity
+    '''
+    for cost in operate_on_pairs(route, cost_func):
+        yield cost
 
 def max_sorted_masked_array(array):
     ''' Return the maximum value of a sorted masked np.array'''
