@@ -52,6 +52,11 @@ class TestOperations(unittest.TestCase):
         self.assertEqual(
             list(consecutive_pairs([1])), [])
 
+        # Generator case
+        self.assertEqual(list(consecutive_pairs(xrange(1,5))),
+                         [(1,2), (2,3), (3,4)])
+
+
     def test_select_weighted(self):
         test = np.ma.MaskedArray([1, 2, 3, 4, 5], mask = [False]*5)
         choices = [0]*5
