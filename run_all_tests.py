@@ -1,3 +1,4 @@
+# Author: Evan K. Friis
 import unittest
 
 from ants.run_tests import *
